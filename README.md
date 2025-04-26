@@ -36,7 +36,7 @@ Track important deadlines and completion statistics<br>
 
 Frontend : HTML5, CSS3, JavaScript 	<br>
 Backend: Firebase Firestore, Firebase Auth<br>
-DevOps/Tools: GitHub Actions (for CI/CD), Git, Markdown, Draw.io (for Architecture)<br>
+DevOps/Tools: GitHub Actions (for CI/CD), Git<br>
 
 
 
