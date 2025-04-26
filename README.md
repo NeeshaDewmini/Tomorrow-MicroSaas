@@ -4,16 +4,6 @@ Welcome to UniTime — a lightweight, efficient Micro SaaS application designed 
 
 
 
-Table of Contents
-
-About the Project
-Features
-Tech Stack
-Setup & Installation
-Deployment
-Documentation
-
-
 
 
 About the Project
