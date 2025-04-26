@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Time Management Tool</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+
+  <style>
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(180deg, #6a11cb, #2575fc);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      color: #fff;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+      background-color: rgba(255, 255, 255, 0.5); /* white at 50% opacity */
+      background-color: rgba(0, 0, 0, 0.2);  
+    }
+    .sidebar ul li i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .sidebar ul li a:hover {
+      text-decoration: none;
+    }
+    /* Main content styling */
+    .main-content {
+      flex: 1;
+      padding: 20px 40px;
+      overflow-y: auto;
+    }
+    .main-content section {
+      margin-bottom: 30px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .main-content section h2 {
+      margin-bottom: 15px;
+      color: #444;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    /* Calendar Section */
+    #calendar {
+      margin-top: 10px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      text-align: center;
+    }
+    .calendar-header {
+      font-weight: bold;
+      padding: 8px 0;
+      background: #e1e7f0;
+      border-radius: 4px;
+    }
+    .calendar-cell {
+      padding: 10px 0;
+      background: #fafafa;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .calendar-cell.empty {
+      background: transparent;
+      border: none;
+    }
+    .calendar-cell.today {
+      background: #ffefba;
+      border: 1px solid #f6d365;
+      font-weight: bold;
+    }
+
+    /* Events Section */
+    .events-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .event {
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 10px;
+      flex: 1 1 calc(33.33% - 30px);
+      display: flex;
+      align-items: center;
+    }
+    .event-icon {
+      background: linear-gradient(to right, #ff6a00, #ee0979);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      margin-right: 15px;
+    }
+
+    /* Automation Panel */
+    .automation-container .task {
+      background: #eee;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-left: 5px solid #2575fc;
+    }
+
+    /* Statistics Section */
+    .stats-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .stats-container .stat {
+      background: #e8f0fe;
+      border-radius: 8px;
+      flex: 1 1 150px;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Recent Activity */
+    .activity-list {
+      list-style: disc;
+      margin-left: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background: #ffffff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+    footer a {
+      text-decoration: none;
+      color: #4A90E2;
+      margin: 0 5px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="dashboard.html"><i class="fa fa-home"></i> Home</a></li>
+            <li><a href="calender.html"><i class="fa fa-calendar"></i> Calendar</a></li>
+            <li><a href="tasks.html"><i class="fa fa-tasks"></i> Tasks</a></li>
+            <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Dashboard Content -->
+    <main class="main-content">
+      <!-- Calendar -->
+      <section class="calendar-section">
+        <h2>Calendar</h2>
+        <div id="calendar"></div>
+      </section>
+
+      <!-- Events -->
+      <section class="events-section">
+        <h2>Important</h2>
+        <div class="events-container">
+          <!-- Event Example -->
+          <div class="event">
+            <div class="event-icon">10</div>
+            <div class="event-details">
+              <h3>Client Call</h3>
+              <p>Discuss project requirements</p>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-icon">15</div>
+            <div class="event-details">
+              <h3>Team Meeting</h3>
+              <p>Weekly sync up</p>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-icon">22</div>
+            <div class="event-details">
+              <h3>Workshop</h3>
+              <p>Time management skills</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Automation Panel / Tasks -->
+      <section class="automation-section">
+        <h2>Task Panel</h2>
+        <div class="automation-container" id="taskPanelContainer"></div>
+      </section>
+
+      <!-- Statistics -->
+      <section class="stats-section">
+        <h2>Statistics</h2>
+        <div class="stats-container">
+          <div class="stat">
+            <p>Tasks</p>
+            <p>5</p>
+          </div>
+          <div class="stat">
+            <p>Completed</p>
+            <p>3</p>
+          </div>
+          <div class="stat">
+            <p>Pending</p>
+            <p>2</p>
+          </div>
+        </div>
+      </section>
+
+      
+    </main>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 My Tasks. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMW5fH_P4j2QgNfxFJlD5Z9Lxa-NX_mjo",
+      authDomain: "tomorrow-32546.firebaseapp.com",
+      projectId: "tomorrow-32546",
+      storageBucket: "tomorrow-32546.firebasestorage.app",
+      messagingSenderId: "542138524597",
+      appId: "1:542138524597:web:03b04dd8df89189c87effc",
+      measurementId: "G-G418YLJJDK"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+  
+      const tasksRef = db.collection("users").doc(user.uid).collection("tasks");
+  
+      tasksRef.onSnapshot(snapshot => {
+        const tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+        // ---------- Stats ----------
+        const total = tasks.length;
+        const completed = tasks.filter(t => t.completed).length;
+        const pending = total - completed;
+  
+        document.querySelector(".stats-container").innerHTML = `
+          <div class="stat"><p>Tasks</p><p>${total}</p></div>
+          <div class="stat"><p>Completed</p><p>${completed}</p></div>
+          <div class="stat"><p>Pending</p><p>${pending}</p></div>
+        `;
+  
+        // ---------- Important (Top 3 High Priority) ----------
+        const importantTasks = tasks
+          .filter(t => t.priority === "High" && !t.completed)
+          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          .slice(0, 3);
+  
+        const eventsContainer = document.querySelector(".events-container");
+        eventsContainer.innerHTML = importantTasks.map(task => `
+          <div class="event">
+            <div class="event-icon">${new Date(task.dueDate).getDate()}</div>
+            <div class="event-details">
+              <h3>${task.name}</h3>
+              <p>Due: ${task.dueDate}</p>
+            </div>
+          </div>
+        `).join("");
+  
+        // ---------- Task Panel (Top 5 Upcoming Incomplete) ----------
+        const taskPanel = document.getElementById("taskPanelContainer");
+        const upcomingTasks = tasks
+          .filter(t => !t.completed)
+          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          .slice(0, 5);
+  
+        taskPanel.innerHTML = upcomingTasks.map(task => `
+          <div class="task">
+            <p><strong>${task.name}</strong> - Due: ${task.dueDate}</p>
+          </div>
+        `).join("");
+  
+        // ---------- Calendar ----------
+        const calendarEl = document.getElementById("calendar");
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+  
+        const firstDay = new Date(currentYear, currentMonth, 1);
+        const startingDay = firstDay.getDay(); // 0 = Sun
+        const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+  
+        const taskDates = new Set(tasks.map(t => t.dueDate));
+  
+        let calendarHTML = '<div class="calendar-grid">';
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        days.forEach(day => {
+          calendarHTML += `<div class="calendar-header">${day}</div>`;
+        });
+  
+        // Empty cells before the 1st
+        for (let i = 0; i < startingDay; i++) {
+          calendarHTML += `<div class="calendar-cell empty"></div>`;
+        }
+  
+        // Actual days
+        for (let d = 1; d <= totalDays; d++) {
+          const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const isToday = d === today.getDate();
+          const hasTask = taskDates.has(dateStr);
+  
+          calendarHTML += `
+            <div class="calendar-cell ${isToday ? 'today' : ''}" style="${hasTask ? 'background:#c4e1ff;' : ''}">
+              ${d}
+            </div>
+          `;
+        }
+  
+        calendarHTML += '</div>';
+        calendarEl.innerHTML = calendarHTML;
+      });
+    });
+  </script>
+  
+</body>
+</html>
