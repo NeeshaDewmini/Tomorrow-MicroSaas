@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Tasks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+  <style>
+     /* Base Reset & Typography */
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #F5F5F5;
+      color: #333333;
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    header {
+      background: #ffffff;
+      padding: 10px 20px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #4A90E2;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333333;
+    }
+    header .user-profile i {
+      font-size: 1.8rem;
+      color: #4A90E2;
+    }
+    
+    /* Overall Layout */
+    .content-container {
+      display: flex;
+      min-height: calc(100vh - 100px); /* Header and footer taken into account */
+    }
+    
+    /* Sidebar Styling */
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(180deg, #6a11cb, #2575fc);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      color: #fff;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar ul li.active,
+    .sidebar ul li:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .sidebar ul li i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .sidebar ul li a:hover {
+      text-decoration: none;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 20px 40px;
+    }
+    
+    /* Add Task Section */
+    .add-task-section {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .add-task-section h2 {
+      margin-bottom: 15px;
+    }
+    .task-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .task-form input[type="text"],
+    .task-form input[type="date"],
+    .task-form select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      flex: 1;
+      min-width: 150px;
+      font-size: 1rem;
+    }
+    .task-form button {
+      padding: 10px 20px;
+      border: none;
+      background: #4A90E2;
+      color: #ffffff;
+      font-size: 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .task-form button:hover {
+      background: #4077b2;
+    }
+    
+    /* Filter Section */
+    .filter-section {
+      margin-bottom: 20px;
+    }
+    .filter-section button {
+      padding: 8px 15px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+    .filter-section button.active,
+    .filter-section button:hover {
+      background: #4A90E2;
+      color: #ffffff;
+      border-color: #4A90E2;
+    }
+    
+    /* Tasks Display Section */
+    .tasks-display {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .tasks-display h3 {
+      margin-bottom: 10px;
+      color: #4A90E2;
+    }
+    
+    /* Task Card */
+    .task-card {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .task-card:hover {
+      transform: scale(1.02);
+      background: #f9f9f9;
+    }
+    .task-card.completed {
+      background: #F5F5F5;
+    }
+    .task-card.completed .task-name {
+      text-decoration: line-through;
+      color: #777;
+    }
+    /* Special styling for favorites in the favorites section */
+    .favorite-card {
+      border: 2px dashed #4A90E2;
+    }
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .task-left input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+    .task-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .task-name {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .task-due-date {
+      font-size: 0.8rem;
+      color: #777;
+    }
+    .task-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .priority-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .task-right button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+    .task-right button:hover {
+      transform: scale(1.1);
+    }
+    
+    /* Footer */
+    footer {
+      background: #ffffff;
+      text-align: center;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+    footer a {
+      text-decoration: none;
+      color: #4A90E2;
+      margin: 0 5px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content-container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        overflow-x: auto;
+      }
+      .sidebar ul {
+        display: flex;
+      }
+      .sidebar ul li {
+        margin: 10px;
+      }
+      .main-content {
+        padding: 10px 20px;
+      }
+      .task-form {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    .edit-inputs input,
+    .edit-inputs select {
+      padding: 5px;
+      margin-right: 5px;
+      font-size: 0.9rem;
+    }
+    .edit-actions button {
+      padding: 5px 10px;
+      margin-left: 5px;
+      border: none;
+      background-color: #4A90E2;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .task-right button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #444;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.task-right button:hover {
+  transform: scale(1.2);
+  color: #2575fc;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Tomorrow</div>
+    <h1>My Tasks</h1>
+    <div class="user-profile"><i class="fas fa-user-circle"></i></div>
+  </header>
+
+  <div class="content-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="dashboard.html"><i class="fa fa-home"></i> Home</a></li>
+            <li><a href="calender.html"><i class="fa fa-calendar"></i> Calendar</a></li>
+            <li><a href="tasks.html"><i class="fa fa-tasks"></i> Tasks</a></li>
+            <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+        </ul>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Add Task Section -->
+      <section class="add-task-section">
+        <h2>Add Task</h2>
+        <div class="task-form">
+          <input type="text" id="taskNameInput" placeholder="Enter task name..." />
+          <select id="prioritySelect">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <input type="date" id="dueDateInput" />
+          <button id="addTaskBtn">Add Task</button>
+        </div>
+      </section>
+
+      <!-- Filter Section -->
+      <section class="filter-section">
+        <button class="filter-btn active" data-filter="all">All Tasks</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+        <button class="filter-btn" data-filter="incompleted">Incompleted</button>
+        <button class="filter-btn" data-filter="favorites">Important</button>
+        <button class="filter-btn" data-filter="overdued">Overdue</button>
+      </section>
+
+      <!-- Tasks Display Section -->
+      <section class="tasks-display">
+        <div id="favoritesSection"></div>
+        <div id="tasksList"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 My Tasks. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMW5fH_P4j2QgNfxFJlD5Z9Lxa-NX_mjo",
+      authDomain: "tomorrow-32546.firebaseapp.com",
+      projectId: "tomorrow-32546",
+      storageBucket: "tomorrow-32546.firebasestorage.app",
+      messagingSenderId: "542138524597",
+      appId: "1:542138524597:web:03b04dd8df89189c87effc",
+      measurementId: "G-G418YLJJDK"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  
+    let tasks = [];
+    let currentFilter = "all";
+    let editingTaskId = null;
+  
+    // Sidebar highlight
+    const links = document.querySelectorAll(".sidebar ul li a");
+    const currentPage = window.location.pathname.split("/").pop();
+    links.forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.parentElement.classList.add("active");
+      }
+    });
+  
+    function getPriorityColor(priority) {
+      if (priority === "High") return "#E74C3C";
+      if (priority === "Medium") return "#F1C40F";
+      if (priority === "Low") return "#27AE60";
+      return "#000";
+    }
+  
+    function addTask() {
+      const name = document.getElementById("taskNameInput").value.trim();
+      const priority = document.getElementById("prioritySelect").value;
+      const dueDate = document.getElementById("dueDateInput").value;
+      const user = auth.currentUser;
+  
+      if (!name || !dueDate) return alert("Please fill in all fields.");
+      if (!user) return alert("You must be logged in.");
+  
+      const task = {
+        name,
+        priority,
+        dueDate,
+        completed: false,
+        favorited: priority === "High",
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+  
+      db.collection("users").doc(user.uid).collection("tasks").add(task)
+        .then(() => {
+          document.getElementById("taskNameInput").value = "";
+          document.getElementById("dueDateInput").value = "";
+          document.getElementById("prioritySelect").value = "Medium";
+        })
+        .catch(err => alert("Error saving task: " + err.message));
+    }
+  
+    function toggleComplete(id) {
+      const user = auth.currentUser;
+      const task = tasks.find(t => t.id === id);
+      if (!user || !task) return;
+      db.collection("users").doc(user.uid).collection("tasks").doc(id).update({
+        completed: !task.completed,
+        favorited: task.completed ? task.favorited : false
+      });
+    }
+  
+    function toggleFavorite(id) {
+      const user = auth.currentUser;
+      const task = tasks.find(t => t.id === id);
+      if (!user || !task) return;
+      db.collection("users").doc(user.uid).collection("tasks").doc(id).update({
+        favorited: !task.favorited
+      });
+    }
+  
+    function deleteTask(id) {
+      const user = auth.currentUser;
+      if (!user) return;
+      db.collection("users").doc(user.uid).collection("tasks").doc(id).delete();
+    }
+  
+    function editTask(id) {
+      editingTaskId = id;
+      renderTasks();
+    }
+  
+    function cancelEdit() {
+      editingTaskId = null;
+      renderTasks();
+    }
+  
+    function updateTask(id) {
+      const user = auth.currentUser;
+      if (!user) return;
+  
+      const name = document.getElementById(`edit_name_${id}`).value.trim();
+      const dueDate = document.getElementById(`edit_due_${id}`).value;
+      const priority = document.getElementById(`edit_priority_${id}`).value;
+  
+      if (!name || !dueDate) return alert("Fill in all fields.");
+  
+      db.collection("users").doc(user.uid).collection("tasks").doc(id).update({
+        name,
+        dueDate,
+        priority
+      }).then(() => {
+        editingTaskId = null;
+      });
+    }
+  
+    function updateFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-filter") === filter);
+      });
+      renderTasks();
+    }
+  
+    function createTaskCard(task, isFavoriteSection) {
+      if (editingTaskId === task.id) {
+        return `
+          <div class="task-card ${task.completed ? 'completed' : ''} ${isFavoriteSection ? 'favorite-card' : ''}">
+            <div class="task-left">
+              <input type="checkbox" disabled ${task.completed ? 'checked' : ''}>
+              <div class="task-info">
+                <input type="text" id="edit_name_${task.id}" value="${task.name}">
+                <input type="date" id="edit_due_${task.id}" value="${task.dueDate}">
+                <select id="edit_priority_${task.id}">
+                  <option value="High" ${task.priority === "High" ? "selected" : ""}>High</option>
+                  <option value="Medium" ${task.priority === "Medium" ? "selected" : ""}>Medium</option>
+                  <option value="Low" ${task.priority === "Low" ? "selected" : ""}>Low</option>
+                </select>
+              </div>
+            </div>
+            <div class="task-right">
+              <button onclick="updateTask('${task.id}')" title="Save"><i class="fas fa-check"></i></button>
+              <button onclick="cancelEdit()" title="Cancel"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+        `;
+      }
+  
+      return `
+        <div class="task-card ${task.completed ? 'completed' : ''} ${isFavoriteSection ? 'favorite-card' : ''}">
+          <div class="task-left">
+            <input type="checkbox" onchange="toggleComplete('${task.id}')" ${task.completed ? 'checked' : ''}>
+            <div class="task-info">
+              <div class="task-name">${task.name}</div>
+              <div class="task-due-date">Due: ${task.dueDate}</div>
+            </div>
+          </div>
+          <div class="task-right">
+            <span class="priority-dot" style="background-color: ${getPriorityColor(task.priority)};" title="Priority: ${task.priority}"></span>
+            <button onclick="editTask('${task.id}')" title="Edit Task"><i class="fas fa-pen-to-square"></i></button>
+            <button onclick="toggleFavorite('${task.id}')" title="${task.favorited ? 'Unmark Important' : 'Mark as Important'}">
+              <i class="${task.favorited ? 'fas' : 'far'} fa-star"></i>
+            </button>
+            <button onclick="deleteTask('${task.id}')" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+      `;
+    }
+  
+    function renderTasks() {
+      const tasksListEl = document.getElementById("tasksList");
+      const favoritesSectionEl = document.getElementById("favoritesSection");
+      tasksListEl.innerHTML = "";
+      favoritesSectionEl.innerHTML = "";
+  
+      let filtered = tasks;
+      if (currentFilter === "completed") filtered = tasks.filter(t => t.completed);
+      else if (currentFilter === "incompleted") filtered = tasks.filter(t => !t.completed);
+      else if (currentFilter === "favorites") filtered = tasks.filter(t => t.favorited);
+      else if (currentFilter === "overdued") {
+        const today = new Date().toISOString().split("T")[0];
+        filtered = tasks.filter(t => !t.completed && t.dueDate < today);
+      }
+  
+      const grouped = filtered.reduce((acc, task) => {
+        const date = task.dueDate;
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(task);
+        return acc;
+      }, {});
+  
+      const sortedDates = Object.keys(grouped).sort();
+      sortedDates.forEach(date => {
+        tasksListEl.insertAdjacentHTML("beforeend", `<h3>${currentFilter === 'completed' ? 'Completed on' : currentFilter === 'overdued' ? 'Overdue as of' : 'Due on'} ${date}</h3>`);
+        grouped[date].forEach(task => {
+          tasksListEl.insertAdjacentHTML("beforeend", createTaskCard(task, task.favorited && currentFilter !== "favorites" && currentFilter !== "completed"));
+        });
+      });
+    }
+  
+    // Realtime Firestore sync
+    function fetchTasks() {
+      const user = auth.currentUser;
+      if (!user) return;
+  
+      db.collection("users").doc(user.uid).collection("tasks")
+        .orderBy("dueDate")
+        .onSnapshot(snapshot => {
+          tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          renderTasks();
+        });
+    }
+  
+    // Events
+    document.getElementById("addTaskBtn").addEventListener("click", addTask);
+    document.getElementById("taskNameInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") addTask();
+    });
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => updateFilter(btn.getAttribute("data-filter")));
+    });
+  
+    auth.onAuthStateChanged(user => {
+      if (user) fetchTasks();
+      else window.location.href = "index.html";
+    });
+  </script>
+  
+  
+</body>
+</html>

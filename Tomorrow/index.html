@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UniTime | Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styleLogin.css">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2 id="formTitle">Login to Tomorrow</h2>
+
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <button onclick="handleAuth()" id="authButton">Login</button>
+    <p>
+      <span id="toggleText">Don't have an account?</span>
+      <a href="#" onclick="toggleMode()" id="toggleLink">Sign Up</a>
+    </p>
+
+    <hr>
+    <button onclick="googleLogin()">Login with Google</button>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMW5fH_P4j2QgNfxFJlD5Z9Lxa-NX_mjo",
+      authDomain: "tomorrow-32546.firebaseapp.com",
+      projectId: "tomorrow-32546",
+      storageBucket: "tomorrow-32546.firebasestorage.app",
+      messagingSenderId: "542138524597",
+      appId: "1:542138524597:web:03b04dd8df89189c87effc",
+      measurementId: "G-G418YLJJDK"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    let isLogin = true;
+
+    function handleAuth() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+  if (isLogin) {
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        alert("Login successful!");
+        window.location.href = "dashboard.html"; 
+      })
+      .catch(error => alert(error.message));
+  } else {
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        alert("Account created!");
+        window.location.href = "dashboard.html"; 
+      })
+      .catch(error => alert(error.message));
+  }
+}
+
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => alert("Logged in with Google!"))
+        .catch(error => alert(error.message));
+    }
+
+    function toggleMode() {
+      isLogin = !isLogin;
+
+      document.getElementById("formTitle").innerText = isLogin ? "Login to UniTime" : "Sign Up to UniTime";
+      document.getElementById("authButton").innerText = isLogin ? "Login" : "Sign Up";
+      document.getElementById("toggleText").innerText = isLogin ? "Don't have an account?" : "Already have an account?";
+      document.getElementById("toggleLink").innerText = isLogin ? "Sign Up" : "Login";
+    }
+  </script>
+</body>
+</html>
