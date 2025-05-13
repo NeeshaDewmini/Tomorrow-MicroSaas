@@ -16,6 +16,7 @@ CI/CD: GitHub Actions
 Hosting: Firebase Hosting
 
 🚀 2. Deployment Process
+
 🔄 Automatic CI/CD
 All changes pushed to the main branch are deployed automatically using GitHub Actions.
 
