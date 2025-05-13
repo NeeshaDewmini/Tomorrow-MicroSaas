@@ -5,18 +5,14 @@ This runbook provides a guide to operating and maintaining the Tomorrow Micro Sa
 It includes standard procedures for deployment, monitoring, incident response, and recovery.
 
 🔧 1. Application Overview
+
 Name: Tomorrow
-
 Type: Micro SaaS - Time Management Tool
-
 Stack:
 
 Frontend: HTML/CSS/JavaScript
-
 Backend: Firebase (Authentication, Firestore)
-
 CI/CD: GitHub Actions
-
 Hosting: Firebase Hosting
 
 🚀 2. Deployment Process
