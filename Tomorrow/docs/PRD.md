@@ -1,144 +1,155 @@
-📄 Product Requirements Document (PRD)
+## 📄 Product Requirements Document (PRD)
 
-1. Project Overview
+---
+
+#### 1. Project Overview
    
 
-Project Name: Tomorrow - Smart Time Management 
-AppAuthor: Nakandalage Janeesha Dewmini
-Date: April 26 , 2025
-Version: 1.0
+Project Name: Tomorrow - Smart Time Management  
+AppAuthor: Nakandalage Janeesha Dewmini  
+Date: April 26 , 2025  
+Version: 1.0  
 
-TimeWise is a lean, Firebase-enabled time management application for students and professionals to prioritize tasks, set deadlines, and increase productivity. Developed as part of the System Administration & Maintenance exam, it reflects current SaaS practices in frontend development, cloud services, and DevOps workflows.
+TimeWise is a lean, Firebase-enabled time management application for students and professionals to prioritize tasks, set deadlines, and increase productivity. Developed as part of the System Administration & Maintenance exam, it reflects current SaaS practices in frontend development, cloud services, and DevOps workflows.  
 
+---
 
-2. Problem Statement
-
-
-Day-to-day task management is a growing problem in the busier world. Users struggle to deal with sophisticated task management tools, a multitude of different sites, and not meeting deadlines. Solutions today are bloated or overly complicated for simple requirements.
-
-The solution requires a lightweight, user-friendly solution with a focus on ease of use, live synchronization, and easy availability.
+#### 2. Problem Statement
 
 
-3. Overall Objectives
+Day-to-day task management is a growing problem in the busier world. Users struggle to deal with sophisticated task management tools, a multitude of different sites, and not meeting deadlines. Solutions today are bloated or overly complicated for simple requirements.  
+
+The solution requires a lightweight, user-friendly solution with a focus on ease of use, live synchronization, and easy availability.  
+
+---
 
 
-User Satisfaction: An uncluttered, distraction-free interface for basic task management.
-
-Engagement & Retention: Enable frequent use with fast syncing and high performance.
-
-Operational Simplicity: Utilize Firebase to minimize backend complexity.
-
-Scalability: Scale architecture transparently with increasing user load.
-
-Learning & Demonstration: Showcase optimal DevOps and system administration best practices.
+#### 3. Overall Objectives
 
 
-4. Target Users (User Personas)
+User Satisfaction: An uncluttered, distraction-free interface for basic task management.  
 
-👩‍🎓 User Persona 1: Nimesha Sathsarani
+Engagement & Retention: Enable frequent use with fast syncing and high performance.  
 
-Age: 23
+Operational Simplicity: Utilize Firebase to minimize backend complexity.  
 
-Location: Uyanwatta road, Warakagoda, Neboda, Sri Lanka
+Scalability: Scale architecture transparently with increasing user load.  
 
-Education: BA in English
+Learning & Demonstration: Showcase optimal DevOps and system administration best practices.  
 
-Role: English Teacher
-
-Tech Comfort Level: Intermediate
-
-Pain Points:
-
-Struggles to remember deadlines
-
-Overwhelmed by scattered Google Keep notes
-
-Difficulty tracking weekly class goals
-
-Goals:
-
-Wants a dashboard for lectures, tasks, exams
-
-Needs reminders for deadlines
+---
 
 
+#### 4. Target Users (User Personas)
 
-👩‍🦱 User Persona 2: Nehali Fernando
+###### 👩‍🎓 User Persona 1: Nimesha Sathsarani  
 
-Age: 30
+Age: 23  
 
-Location: Galle, Sri Lanka
+Location: Uyanwatta road, Warakagoda, Neboda, Sri Lanka  
 
-Education: Higer National Diploma
+Education: BA in English  
 
-Role: Small Business Owner
+Role: English Teacher  
 
-Tech Comfort Level: Low
+Tech Comfort Level: Intermediate  
 
-Pain Points:
+Pain Points:  
 
-Struggles with complex apps
+Struggles to remember deadlines  
 
-Forgetting customer order deadlines
+Overwhelmed by scattered Google Keep notes  
 
-Finds task apps confusing
+Difficulty tracking weekly class goals  
 
-Goals:
+Goals:  
 
-Simple, easy-to-use task list
+Wants a dashboard for lectures, tasks, exams  
 
-Quick reminders for deliveries and deadlines
-
-
-5. User Journey Maps
-
-Step 1
-Action : Sign In 
-Touchpoint : Quick login via Firebase Authentication
+Needs reminders for deadlines  
 
 
-Step 2
-Action : Create Tasks 
-Touchpoint : Add a task, set priority level and a deadline
 
+###### 👩‍🦱 User Persona 2: Nehali Fernando  
 
-Step 3
-Action : Stay Organized
-Touchpoint : View tasks and note reminders
+Age: 30  
 
-6. Value Proposition
+Location: Galle, Sri Lanka  
 
-"Simplify Your Day, One Task at a Time."
+Education: Higer National Diploma  
 
-TimeWise provides a simple, real-time syncing task manager. In contrast to project management tools with complicated interfaces, it has a fast, user-friendly experience ideal for individuals who must plan everyday objectives easily and effectively and students who want meet their deadlines successfully.
+Role: Small Business Owner  
 
-Real-time syncing with Firebase
+Tech Comfort Level: Low  
 
-Minimal interface for maximum productivity
+Pain Points:  
 
-Mobile-responsive design for users on-the-go
+Struggles with complex apps  
 
+Forgetting customer order deadlines  
 
-7. Pricing Strategy
+Finds task apps confusing  
+
+Goals:  
+
+Simple, easy-to-use task list  
+
+Quick reminders for deliveries and deadlines  
+
+---
+
+### 5. User Journey Maps
+
+Step 1  
+Action : Sign In   
+Touchpoint : Quick login via Firebase Authentication  
+
+  
+Step 2  
+Action : Create Tasks   
+Touchpoint : Add a task, set priority level and a deadline  
+
+  
+Step 3  
+Action : Stay Organized  
+Touchpoint : View tasks and note reminders  
+
+---
+
+### 6. Value Proposition
+
+*"Simplify Your Day, One Task at a Time."*  
+
+TimeWise provides a simple, real-time syncing task manager. In contrast to project management tools with complicated interfaces, it has a fast, user-friendly experience ideal for individuals who must plan everyday objectives easily and effectively and students who want meet their deadlines successfully.  
+
+Real-time syncing with Firebase  
+
+Minimal interface for maximum productivity  
+
+Mobile-responsive design for users on-the-go  
+
+---
+
+### 7. Pricing Strategy
    
 
-Plan : Free
-Features : Task management, Simple login, real-time sync
-Cost : $0
+Plan : Free  
+Features : Task management, Simple login, real-time sync  
+Cost : $0  
 
-Plan : Pro (future)
-Features : Deadline reminders, offline mode, team boards
-Cost : $4.99/month
-
-
-Firebase Free Tier supports up to:
-
-10GB hosting bandwidth
-50k database reads/day
-10k authentication verifications/month
-
-Scaling to the paid plan will occur only when reaching 1,000+ monthly active users.
+Plan : Pro (future)  
+Features : Deadline reminders, offline mode, team boards  
+Cost : $4.99/month  
 
 
+Firebase Free Tier supports up to:  
 
-✨ End of PRD Document ✨
+10GB hosting bandwidth  
+50k database reads/day  
+10k authentication verifications/month  
+
+Scaling to the paid plan will occur only when reaching 1,000+ monthly active users.  
+
+
+
+**✨ End of PRD Document ✨**
