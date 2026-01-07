@@ -57,26 +57,26 @@ Reason: Team collaboration, CI/CD
   
 ---
 
-5. Database Design  
+### 5. Database Design  
 
      
 Firestore Structure:  
   
 users (Collection)  
-    &nbsp└── userId (Document)  
-        &nbsp├── name: "Neesha"  
-        &nbsp├── email: "janeeshad07@gmail.com"  
-        &nbsp├── notifications: "on"  
-        &nbsp├── theme: "light"  
-        &nbsp└── tasks (Subcollection)  
-              &nbsp├── taskId1 (Document)  
-                    &nbsp├── name: "Finish Assignment"  
-                    &nbsp├── priority: "High"  
-                    &nbsp├── dueDate: "2025-04-30"  
-                    &nbsp├── completed: false  
-                    &nbsp├── favorited: true  
-              &nbsp├── taskId2 (Document)  
-                    &nbsp└── ...  
+    └── userId (Document)  
+        ├── name: "Neesha"  
+        ├── email: "janeeshad07@gmail.com"  
+        ├── notifications: "on"  
+        ├── theme: "light"  
+        └── tasks (Subcollection)  
+              ├── taskId1 (Document)  
+                    ├── name: "Finish Assignment"  
+                    ├── priority: "High"  
+                    ├── dueDate: "2025-04-30"  
+                    ├── completed: false  
+                    ├── favorited: true  
+              ├── taskId2 (Document)  
+                    └── ...  
 
 ---
                     
