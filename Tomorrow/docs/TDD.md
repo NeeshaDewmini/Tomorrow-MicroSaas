@@ -142,13 +142,13 @@ Prevents empty task names or invalid dates.
 Decision: Use Firebase for backend	  
 Reason : Reduces complexity, serverless, real-time sync  
   
-Decision: Firestore instead of Realtime Database  	
+Decision: Firestore instead of Realtime Database    	
 Reason : More scalable, structured querying  
   
-Decision: Separate tasks as subcollections  	
+Decision: Separate tasks as subcollections    	
 Reason : Keeps data modular and user-specific  
    
-Decision: Simple Frontend (HTML, CSS, JS)  	
+Decision: Simple Frontend (HTML, CSS, JS)    	
 Reason : Faster development, no framework overhead  
   
 
