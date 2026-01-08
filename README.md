@@ -1,7 +1,7 @@
 # Tomorrow-MicroSaas
 
 Welcome to UniTime — a lightweight, efficient Micro SaaS application designed to help users manage their tasks, schedules, and events seamlessly, powered by modern Firebase backend and advanced DevOps practices.
-
+---
 
 
 
@@ -16,7 +16,7 @@ Visualize schedules via a dynamic calendar <br>
 Track important deadlines and completion statistics<br> 
 
 
-
+---
 
 
 **Features**
@@ -31,7 +31,7 @@ Track important deadlines and completion statistics<br>
  Editable user profile settings (name, email, preferences)<br>
  Basic notification preferences and theme settings<br>
 
-
+---
 
 **Tech Stack**
 
@@ -40,7 +40,7 @@ Frontend : HTML5, CSS3, JavaScript 	<br>
 Backend: Firebase Firestore, Firebase Auth<br>
 DevOps/Tools: GitHub Actions (for CI/CD), Git<br>
 
-
+---
 
 
 **Setup & Installation**<br>
@@ -48,9 +48,10 @@ DevOps/Tools: GitHub Actions (for CI/CD), Git<br>
 
 
 Clone the repository<br>
-
+```
 git clone https://github.com/NeeshaDewmini/Tomorrow-MicroSaas.git<br>
 cd Tomorrow-MicroSaaS<br>
+```
 
 Set up Firebase<br>
 
@@ -61,14 +62,16 @@ Get the Firebase configuration snippet and add it inside the <script> tag in eac
 Open dashboard.html in your browser!<br>
 
 
-
+---
 
 **Deployment**<br>
 
+```
 Hosted via Firebase Hosting<br>
 Hosting URL: https://tomorrow-32546.web.app<br>
+```
 
-
+---
 
 
 **Documentation**<br>
