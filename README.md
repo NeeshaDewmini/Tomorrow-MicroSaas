@@ -49,8 +49,8 @@ DevOps/Tools: GitHub Actions (for CI/CD), Git<br>
 
 Clone the repository<br>
 ```
-git clone https://github.com/NeeshaDewmini/Tomorrow-MicroSaas.git<br>
-cd Tomorrow-MicroSaaS<br>
+git clone https://github.com/NeeshaDewmini/Tomorrow-MicroSaas.git
+cd Tomorrow-MicroSaaS
 ```
 
 Set up Firebase<br>
