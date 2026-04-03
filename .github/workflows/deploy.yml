@@ -23,5 +23,5 @@ jobs:
 
       - name: Deploy to Firebase Hosting
         run: |
-         cd Tomorrow
-         firebase deploy --only hosting --project tomorrow-32546 --token ${{ secrets.FIREBASE_TOKEN }}
+          cd Tomorrow
+          firebase deploy --only hosting --project tomorrow-32546 --token ${{ secrets.FIREBASE_TOKEN }}
