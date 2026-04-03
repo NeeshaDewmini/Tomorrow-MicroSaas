@@ -67,8 +67,8 @@ Open dashboard.html in your browser!<br>
 **Deployment**<br>
 
 ```
-Hosted via Firebase Hosting<br>
-Hosting URL: https://tomorrow-32546.web.app<br>
+Hosted via Firebase Hosting
+Hosting URL: https://tomorrow-32546.web.app
 ```
 
 ---
